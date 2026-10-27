@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { LogIn, ShieldCheck, WifiOff } from 'lucide-react';
+import { Lightbulb, LogIn, Moon, ShieldCheck, WifiOff } from 'lucide-react';
 import { Logo } from '../components/Layout';
 import { Field, Spinner } from '../components/ui';
 import { NetworkError, post } from '../lib/api';
+import { getTheme, toggleTheme, type Theme } from '../lib/theme';
 import { useAuth } from '../store/stores';
 
 export default function Login() {
@@ -12,6 +13,7 @@ export default function Login() {
   const [recordar, setRecordar] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [theme, setTheme] = useState<Theme>(getTheme);
   const setSesion = useAuth((s) => s.setSesion);
   const nav = useNavigate();
   const loc = useLocation() as { state?: { from?: string } };
@@ -33,8 +35,17 @@ export default function Login() {
   }
 
   return (
-    <div className="grid min-h-full place-items-center bg-gradient-to-br from-brand-50 via-crema-100 to-brand-100 p-4">
-      <div className="grid w-full max-w-4xl overflow-hidden rounded-3xl bg-white shadow-2xl md:grid-cols-2">
+    <div className="login-shell relative grid min-h-full place-items-center bg-gradient-to-br from-brand-50 via-crema-100 to-brand-100 p-4">
+      <button
+        className="btn btn-md btn-secondary absolute right-4 top-4"
+        onClick={() => setTheme(toggleTheme())}
+        aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+        title={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+      >
+        {theme === 'dark' ? <Lightbulb className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+        <span className="hidden sm:inline">{theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}</span>
+      </button>
+      <div className="login-card grid w-full max-w-4xl overflow-hidden rounded-3xl bg-white shadow-2xl md:grid-cols-2">
         <div className="hidden flex-col justify-between bg-brand-700 p-10 text-white md:flex">
           <Logo className="[&_*]:!text-white [&>span]:!bg-white/15 [&>span]:!ring-white/20" />
           <div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Download, KeyRound, RefreshCw, Save, WifiOff } from 'lucide-react';
+import { Download, KeyRound, Moon, RefreshCw, Save, Sun, WifiOff } from 'lucide-react';
 import { Badge, ErrorBox, Field, Loading, PageHeader, Spinner, cx, useAsync } from '../components/ui';
 import { descargar, errMsg, get, put, setForcedOffline } from '../lib/api';
 import { fechaHora, money } from '../lib/format';
@@ -7,6 +7,7 @@ import { localdb } from '../lib/localdb';
 import { chequearConexion, contarPendientes, refrescarCache, sincronizar } from '../lib/sync';
 import type { VentaPendiente } from '../lib/types';
 import { toast, useAuth, useConn } from '../store/stores';
+import { getTheme, toggleTheme, type Theme } from '../lib/theme';
 
 type Cfg = Record<string, string>;
 
@@ -22,6 +23,7 @@ export default function Configuracion() {
   const [claveActual, setClaveActual] = useState('');
   const [claveNueva, setClaveNueva] = useState('');
   const [claveRep, setClaveRep] = useState('');
+  const [theme, setTheme] = useState<Theme>(getTheme);
 
   useEffect(() => { if (data) setC(data); }, [data]);
   useEffect(() => { localdb.ventasPendientes.orderBy('fecha_hora').toArray().then(setPend); }, [pendientes, syncing]);
@@ -125,6 +127,20 @@ export default function Configuracion() {
 
       <section className="card space-y-4 p-5">
         <h2 className="text-lg font-bold">Sistema</h2>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="font-semibold">Apariencia</p>
+            <p className="text-sm text-ink-500">Elegí el modo de colores de la aplicación.</p>
+          </div>
+          <button
+            className="btn btn-md btn-secondary"
+            onClick={() => setTheme(toggleTheme())}
+            aria-pressed={theme === 'dark'}
+          >
+            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            {theme === 'dark' ? 'Usar modo claro' : 'Usar modo oscuro'}
+          </button>
+        </div>
         <div className="flex flex-wrap items-center gap-3">
           <span className="font-semibold">Estado de conexión:</span>
           {online ? <Badge tone="ok">🟢 Online</Badge> : <Badge tone="warn">🟠 Sin conexión</Badge>}

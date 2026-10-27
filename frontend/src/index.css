@@ -9,6 +9,41 @@ body {
   font-family: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
   font-size: 16px;
 }
+html.dark { color-scheme: dark; }
+html.dark body { background: #111916; color: #e6efe9; }
+html.dark .bg-crema-50 { background-color: #1b2621; }
+html.dark .bg-crema-100 { background-color: #111916; }
+html.dark .bg-crema-200 { background-color: #2a3932; }
+html.dark .bg-white { background-color: #1c2923; }
+html.dark .text-ink-900 { color: #e6efe9; }
+html.dark .text-ink-700 { color: #c5d5cc; }
+html.dark .text-ink-500 { color: #9eb2a7; }
+html.dark .text-ink-300 { color: #71877c; }
+html.dark .border-crema-200 { border-color: #34483e; }
+html.dark .border-ink-300 { border-color: #52685c; }
+html.dark .hover\:bg-brand-50:hover { background-color: #243d2a; }
+html.dark .hover\:bg-ink-300\/25:hover { background-color: rgb(113 135 124 / .18); }
+html.dark .active\:bg-ink-300\/40:active { background-color: rgb(113 135 124 / .28); }
+html.dark .field { background-color: #17231e; color: #e6efe9; }
+html.dark .field::placeholder { color: #84998e; }
+html.dark .field:disabled { background-color: #26352e; color: #8fa398; }
+html.dark .btn-secondary { background-color: #24352d; color: #cde2d3; border-color: #557565; }
+html.dark .btn-secondary:hover { background-color: #2d4939; }
+html.dark .card { border-color: #34483e; }
+html.dark .th { background-color: #1b2621; border-color: #34483e; color: #9eb2a7; }
+html.dark .td { border-color: #34483e; }
+html.dark select option { background-color: #1c2923; color: #e6efe9; }
+.login-shell { transition: background .2s ease; }
+html.dark .login-shell { background: linear-gradient(135deg, #10241a 0%, #111916 52%, #183b27 100%); }
+html.dark .login-card { background-color: #1c2923; box-shadow: 0 25px 60px rgb(0 0 0 / .4); }
+.vencimiento-vencido { background-color: #fee2e2; color: #b91c1c; }
+.vencimiento-proximo { background-color: #fef3c7; color: #92400e; }
+html.dark .vencimiento-vencido { background-color: #4c1d1d; color: #fecaca; }
+html.dark .vencimiento-proximo { background-color: #4a3210; color: #fde68a; }
+html.dark .vencimiento-vencido .text-ink-500,
+html.dark .vencimiento-proximo .text-ink-500 { color: currentColor; opacity: .85; }
+html.dark .vencimiento-vencido .td,
+html.dark .vencimiento-proximo .td { border-color: rgb(255 255 255 / .14); }
 * { -webkit-tap-highlight-color: transparent; }
 input[type='number']::-webkit-inner-spin-button { opacity: .6; }
 

@@ -70,7 +70,7 @@ export default function Dashboard() {
           <div className="grid gap-4 lg:grid-cols-2">
             <ul className="space-y-2">
               {d.stock_critico.items.map((p) => (
-                <li key={p.id_producto} className="flex items-center justify-between gap-3 rounded-xl bg-peligro-50 px-4 py-2.5">
+                <li key={p.id_producto} className="flex items-center justify-between gap-3 rounded-xl bg-peligro-50 px-4 py-2.5 text-peligro-700">
                   <span className="font-semibold">🔴 Stock crítico: {p.nombre}</span>
                   <Badge tone="crit">{num(p.stock_actual)} {unidadDe(p.tipo_venta)} (mín. {num(p.stock_minimo)})</Badge>
                 </li>
@@ -81,13 +81,13 @@ export default function Dashboard() {
             </ul>
             <ul className="space-y-2">
               {d.proximos_vencimientos.items.map((v) => (
-                <li key={v.id_vencimiento} className={cx('flex items-center justify-between gap-3 rounded-xl px-4 py-2.5', v.estado === 'VENCIDO' ? 'bg-peligro-50' : 'bg-alerta-50')}>
+                <li key={v.id_vencimiento} className={cx('flex items-center justify-between gap-3 rounded-xl px-4 py-2.5', v.estado === 'VENCIDO' ? 'bg-peligro-50 text-peligro-700' : 'bg-alerta-50 text-alerta-700')}>
                   <span className="font-semibold">{v.estado === 'VENCIDO' ? '🔴 Vencido' : '🟠 Vence pronto'}: {v.producto}</span>
                   <Badge tone={v.estado === 'VENCIDO' ? 'crit' : 'warn'}>{fechaCorta(v.fecha_vencimiento)}</Badge>
                 </li>
               ))}
               {d.alertas_sistema.map((a) => (
-                <li key={a.id} className="flex items-start justify-between gap-3 rounded-xl bg-sky-50 px-4 py-2.5 text-sm">
+                <li key={a.id} className="flex items-start justify-between gap-3 rounded-xl bg-sky-50 px-4 py-2.5 text-sm text-sky-800">
                   <span>ℹ️ {a.mensaje}</span>
                 </li>
               ))}

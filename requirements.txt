@@ -1,0 +1,22 @@
+# Requisitos del entorno para ejecutar Gluten Free Life.
+#
+# Este proyecto está desarrollado con Node.js y PostgreSQL; este archivo no
+# contiene paquetes Python ni se instala con pip.
+#
+# Ejecución recomendada:
+# - Docker Engine
+# - Docker Compose V1 (comando: docker-compose) o Docker Compose V2
+#   (comando: docker compose)
+# - Git, únicamente si se clona el repositorio
+#
+# Desarrollo local sin Docker:
+# - Node.js 22
+# - npm
+# - PostgreSQL 16
+#
+# En sistemas Linux donde el usuario no tiene permisos sobre Docker:
+#   sudo docker-compose up -d --build
+#
+# Para evitar sudo en cada comando, agregar el usuario al grupo docker,
+# cerrar sesión y volver a iniciarla:
+#   sudo usermod -aG docker "$USER"

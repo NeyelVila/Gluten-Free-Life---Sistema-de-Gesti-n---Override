@@ -4,6 +4,7 @@ import Layout from './components/Layout';
 import { Toasts } from './components/ui';
 import { useAuth } from './store/stores';
 import { iniciarMonitor, refrescarCache } from './lib/sync';
+import { applyTheme, getTheme } from './lib/theme';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import POS from './pages/POS';
@@ -30,6 +31,8 @@ function Protegido({ children }: { children: JSX.Element }) {
 
 export default function App() {
   const usuario = useAuth((s) => s.usuario);
+
+  useEffect(() => { applyTheme(getTheme()); }, []);
 
   useEffect(() => {
     if (!usuario) return;

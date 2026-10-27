@@ -81,13 +81,16 @@ El proyecto está dockerizado.
 
 - [Docker](https://www.docker.com/) y Docker Compose instalados.
 - Git.
+- En Linux, el usuario debe tener permisos para acceder al servicio Docker.
+
+Podés consultar la lista de requisitos en [`requirements.txt`](requirements.txt).
 
 ### Pasos para ejecutar con Docker (Recomendado)
 
 1. **Clonar el repositorio:**
 
    ```bash
-   git clone <URL_DEL_REPOSITORIO>
+   git clone https://github.com/NeyelVila/Gluten-Free-Life---Sistema-de-Gesti-n---Override.git
    cd gluten-free-life
    ```
 
@@ -97,6 +100,33 @@ El proyecto está dockerizado.
    ```bash
    cp .env.example .env        # Cambiar POSTGRES_PASSWORD y JWT_SECRET según corresponda
    docker compose up -d --build
+   ```
+
+   En Linux, si aparece `PermissionError: [Errno 13] Permission denied` al
+   acceder al socket de Docker, ejecutá:
+
+   ```bash
+   sudo docker-compose up -d --build
+   ```
+
+   Si tu instalación utiliza Compose V2, el equivalente es:
+
+   ```bash
+   sudo docker compose up -d --build
+   ```
+
+   Para no tener que usar `sudo` en cada comando, agregá tu usuario al grupo
+   `docker` y cerrá sesión o reiniciá el equipo:
+
+   ```bash
+   sudo usermod -aG docker "$USER"
+   sudo reboot
+   ```
+
+   Luego verificá el acceso con:
+
+   ```bash
+   docker ps
    ```
 
 3. **Acceder a la Aplicación:**
@@ -143,6 +173,11 @@ Para evaluar el alcance del proyecto, te sugerimos seguir este flujo:
 3. Volvé a **Configuración → Restablecer conexión**: la venta se sincroniza sola y aparece «CONEXIÓN RESTABLECIDA».
 
 Sin conexión, el resto de las pantallas queda en **solo lectura** con los datos guardados. Pedidos, ingresos, cierre de caja e importación requieren conexión y lo avisan. El catálogo se guarda en el navegador (IndexedDB) cuando se ingresa con conexión; la primera vez hace falta Internet para iniciar sesión.
+
+## Documentación
+
+- [Manual de usuario](docs/manual-usuario.md): instalación de demostración, navegación y operación diaria.
+- [Manual técnico del programa](docs/manual-tecnico.md): arquitectura, módulos, base de datos, lógica, ejecución y pruebas.
 
 ## 📂 Estructura del Proyecto
 

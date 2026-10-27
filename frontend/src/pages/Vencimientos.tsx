@@ -41,7 +41,7 @@ export default function Vencimientos() {
               <thead><tr><th className="th">Producto</th><th className="th !text-right">Cantidad</th><th className="th">Vencimiento</th><th className="th">Estado</th><th className="th" /></tr></thead>
               <tbody>
                 {data!.items.map((v) => (
-                  <tr key={v.id_vencimiento} className={cx(v.estado === 'VENCIDO' && 'bg-peligro-50/60', v.estado === 'PROXIMO' && 'bg-alerta-50/60')}>
+                  <tr key={v.id_vencimiento} className={cx(v.estado === 'VENCIDO' && 'vencimiento-vencido', v.estado === 'PROXIMO' && 'vencimiento-proximo')}>
                     <td className="td"><button className="text-left font-bold hover:underline" onClick={() => nav(`/inventario/${v.id_producto}`)}>{v.producto}</button><div className="text-xs text-ink-500">{v.categoria}</div></td>
                     <td className="td text-right font-semibold">{num(v.cantidad)} {unidadDe(v.tipo_venta)}</td>
                     <td className="td"><b>{fechaCorta(v.fecha_vencimiento)}</b>{v.estado !== 'RETIRADO' && <div className="text-xs text-ink-500">{diasLabel(v.dias_restantes)}</div>}</td>
