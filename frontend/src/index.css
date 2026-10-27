@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light; }
+html, body, #root { height: 100%; }
+body {
+  @apply bg-crema-100 text-ink-900 antialiased;
+  font-family: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+}
+* { -webkit-tap-highlight-color: transparent; }
+input[type='number']::-webkit-inner-spin-button { opacity: .6; }
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition select-none
+      focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-300
+      active:scale-[.98] disabled:opacity-45 disabled:cursor-not-allowed disabled:active:scale-100;
+  }
+  .btn-md { @apply px-4 py-2.5 text-base; }
+  .btn-lg { @apply px-6 py-4 text-lg; }
+  .btn-sm { @apply px-3 py-1.5 text-sm rounded-lg; }
+  .btn-primary { @apply bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800 shadow-sm; }
+  .btn-secondary { @apply bg-white text-brand-800 border border-brand-300 hover:bg-brand-50 active:bg-brand-100; }
+  .btn-ghost { @apply bg-transparent text-ink-700 hover:bg-ink-300/25 active:bg-ink-300/40; }
+  .btn-danger { @apply bg-peligro-600 text-white hover:bg-peligro-700 active:bg-peligro-700; }
+  .btn-warning { @apply bg-alerta-500 text-white hover:bg-alerta-600; }
+  .field {
+    @apply w-full rounded-xl border border-ink-300 bg-white px-3.5 py-2.5 text-base text-ink-900 placeholder:text-ink-500/70
+      transition focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-200
+      disabled:bg-crema-200 disabled:text-ink-500;
+  }
+  .field-error { @apply border-peligro-500 focus:border-peligro-500 focus:ring-peligro-100; }
+  .card { @apply rounded-2xl bg-white shadow-card border border-crema-200; }
+  .th { @apply px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-ink-500 bg-crema-50 border-b border-crema-200 whitespace-nowrap; }
+  .td { @apply px-4 py-3 border-b border-crema-200 align-middle; }
+  .kbd { @apply rounded-md border border-ink-300 bg-white px-1.5 py-0.5 text-xs font-semibold text-ink-500; }
+}
+
+/* ── Ticket de impresión ── */
+#ticket-print { display: none; }
+@media print {
+  body * { visibility: hidden !important; }
+  #ticket-print, #ticket-print * { visibility: visible !important; }
+  #ticket-print { display: block !important; position: absolute; left: 0; top: 0; width: 72mm; padding: 2mm; color: #000; font-family: 'Courier New', monospace; font-size: 11px; }
+  @page { margin: 4mm; }
+}
