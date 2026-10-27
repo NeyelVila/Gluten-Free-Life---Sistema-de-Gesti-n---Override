@@ -209,11 +209,11 @@ gluten-free-life/
 ---
 ## Licencia
 
-Proyecto con fines educativos (Practica profesionalizante IV: PROYETO INTEGRADOR). Repositorio: //**poner repositorio**
+Proyecto con fines educativos (Practica profesionalizante IV: PROYETO INTEGRADOR). 
+
+Repositorio: https://github.com/NeyelVila/Gluten-Free-Life---Sistema-de-Gesti-n---Override
+
 **Año:** 2026
 
 _Agradecimientos especiales a los profesores y mentores que acompañaron el proceso de desarrollo de este proyecto._
 
-```
-
-```
