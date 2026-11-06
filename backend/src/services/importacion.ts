@@ -20,7 +20,7 @@ export const importSchema = z.object({
 });
 
 const str = (v: unknown) => (v == null ? '' : String(v).trim());
-const parseNum = (v: unknown): number | null => {
+export const parseNum = (v: unknown): number | null => {
   if (v == null || String(v).trim() === '') return null;
   if (typeof v === 'number') return Number.isFinite(v) ? v : null;
   let s = String(v).replace(/[$\s]/g, '');
@@ -30,7 +30,7 @@ const parseNum = (v: unknown): number | null => {
   const n = Number(s);
   return Number.isFinite(n) ? n : null;
 };
-const parseModalidad = (v: unknown): 'UNIDAD' | 'GRANEL' | null => {
+export const parseModalidad = (v: unknown): 'UNIDAD' | 'GRANEL' | null => {
   const s = str(v).toLowerCase();
   if (['unidad', 'u', 'un', 'unid', 'cerrado'].includes(s)) return 'UNIDAD';
   if (['granel', 'kg', 'peso', 'a granel'].includes(s)) return 'GRANEL';

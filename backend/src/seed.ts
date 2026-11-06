@@ -2,7 +2,7 @@
  * Datos de demostración (ficticios). ATENCIÓN: `npm run seed` BORRA los datos de negocio y los reemplaza.
  * Con `--if-empty` solo carga si todavía no hay usuarios (lo usa docker-compose en el primer arranque).
  */
-import { pool, q, q1, tx } from './db';
+import { TZ, pool, q, q1, tx } from './db';
 import { hashClave } from './auth';
 import { migrate } from './migrate';
 import { actualizarPrecioVenta } from './services/dominio';
@@ -101,43 +101,86 @@ export async function seed(opts: { ifEmpty?: boolean } = {}) {
       c
     );
 
-    // Ventas históricas de los últimos 7 días (no tocan el stock actual, que ya es el vigente)
-    const prods = await q<any>('SELECT id_producto, nombre, tipo_venta, precio_venta FROM producto', [], c);
-    const canales = ['EFECTIVO', 'EFECTIVO', 'EFECTIVO', 'MERCADO_PAGO', 'TARJETA'];
-    for (let dia = 6; dia >= 0; dia--) {
-      const n = dia === 0 ? 5 : 7 + Math.floor(rnd() * 6);
-      for (let k = 0; k < n; k++) {
-        const items = new Map<number, number>();
-        const nItems = 1 + Math.floor(rnd() * 3);
-        for (let i = 0; i < nItems; i++) {
-          const p = pick(prods);
-          const cant = p.tipo_venta === 'GRANEL' ? [0.25, 0.5, 0.75, 1, 1.5][Math.floor(rnd() * 5)] : 1 + Math.floor(rnd() * 2);
-          items.set(p.id_producto, cant);
-        }
-        const lineas = [...items.entries()].map(([id, cant]) => {
-          const p = prods.find((x: any) => x.id_producto === id);
-          return { id, cant, precio: p.precio_venta, sub: Math.round(cant * p.precio_venta * 100) / 100 };
-        });
-        const total = Math.round(lineas.reduce((s, l) => s + l.sub, 0) * 100) / 100;
-        const canal = pick(canales);
-        const recibido = canal === 'EFECTIVO' ? Math.ceil(total / 1000) * 1000 : null;
-        // Hoy: horas pasadas (nunca en el futuro). Días previos: horario comercial.
-        const minutosAtras = dia === 0 ? 20 + Math.floor(rnd() * 240) : dia * 1440 + 60 + Math.floor(rnd() * 600);
-        const v = await q1<any>(
-          `INSERT INTO venta (id_usuario, fecha_hora, total_cobrado, canal_pago, estado, monto_recibido, vuelto)
-           VALUES ($1, now() - ($2::int * interval '1 minute'), $3, $4, 'REGISTRADA', $5, $6) RETURNING id_venta`,
-          [u.id_usuario, minutosAtras, total, canal, recibido, recibido ? recibido - total : null],
-          c
-        );
-        for (const l of lineas) {
-          await q(
-            'INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unit_hist, subtotal) VALUES ($1,$2,$3,$4,$5)',
-            [v.id_venta, l.id, l.cant, l.precio, l.sub],
-            c
-          );
-        }
-      }
+    
+// Ventas históricas de los últimos 7 días (no tocan el stock actual, que ya es el vigente)
+const prods = await q<any>('SELECT id_producto, nombre, tipo_venta, precio_venta FROM producto', [], c);
+const canales = ['EFECTIVO', 'EFECTIVO', 'EFECTIVO', 'MERCADO_PAGO', 'TARJETA'];
+
+for (let dia = 6; dia >= 0; dia--) {
+  const n = dia === 0 ? 5 : 7 + Math.floor(rnd() * 6);
+
+  for (let k = 0; k < n; k++) {
+    const items = new Map<number, number>();
+    const nItems = 1 + Math.floor(rnd() * 3);
+
+    for (let i = 0; i < nItems; i++) {
+      const p = pick(prods);
+      const cant = p.tipo_venta === 'GRANEL'
+        ? [0.25, 0.5, 0.75, 1, 1.5][Math.floor(rnd() * 5)]
+        : 1 + Math.floor(rnd() * 2);
+
+      items.set(p.id_producto, cant);
     }
+
+    const lineas = [...items.entries()].map(([id, cant]) => {
+      const p = prods.find((x: any) => x.id_producto === id);
+      return {
+        id,
+        cant,
+        precio: p.precio_venta,
+        sub: Math.round(cant * p.precio_venta * 100) / 100
+      };
+    });
+
+    const total = Math.round(lineas.reduce((s, l) => s + l.sub, 0) * 100) / 100;
+    const canal = pick(canales);
+    const recibido = canal === 'EFECTIVO' ? Math.ceil(total / 1000) * 1000 : null;
+
+    // Fecha anclada al inicio del día local para evitar que las ventas
+    // de demostración de hoy aparezcan en el día anterior.
+    const inicioDia = `(date_trunc('day', now() AT TIME ZONE '${TZ}') AT TIME ZONE '${TZ}')`;
+
+    const fechaSql =
+      dia === 0
+        ? `GREATEST(now() - ($2::int * interval '1 minute'), ${inicioDia})`
+        : `${inicioDia} - ${dia} * interval '1 day' + ($2::int * interval '1 minute')`;
+
+    const minutos = dia === 0
+      ? 20 + Math.floor(rnd() * 240)
+      : 9 * 60 + Math.floor(rnd() * 600);
+
+    const v = await q1<any>(
+      `INSERT INTO venta (
+        id_usuario,
+        fecha_hora,
+        total_cobrado,
+        canal_pago,
+        estado,
+        monto_recibido,
+        vuelto
+      )
+      VALUES ($1, ${fechaSql}, $3, $4, 'REGISTRADA', $5, $6)
+      RETURNING id_venta`,
+      [
+        u.id_usuario,
+        minutos,
+        total,
+        canal,
+        recibido,
+        recibido ? recibido - total : null
+      ],
+      c
+    );
+
+    for (const l of lineas) {
+      await q(
+        'INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unit_hist, subtotal) VALUES ($1,$2,$3,$4,$5)',
+        [v.id_venta, l.id, l.cant, l.precio, l.sub],
+        c
+      );
+    }
+  }
+}
 
     // Pedidos históricos en distintos estados
     const crearPedido = async (diasAtras: number, estados: string[], items: [string, number][]) => {

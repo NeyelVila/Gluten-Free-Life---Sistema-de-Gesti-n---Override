@@ -26,6 +26,8 @@ export default function Configuracion() {
   const [theme, setTheme] = useState<Theme>(getTheme);
 
   useEffect(() => { if (data) setC(data); }, [data]);
+  // Si la pantalla se abrió sin conexión y falló la carga, reintenta sola al volver Internet.
+  useEffect(() => { if (online && error && !data) reload(); }, [online]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { localdb.ventasPendientes.orderBy('fecha_hora').toArray().then(setPend); }, [pendientes, syncing]);
 
   if (loading && !data) return <Loading />;

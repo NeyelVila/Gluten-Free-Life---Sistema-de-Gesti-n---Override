@@ -326,6 +326,19 @@ Para evaluar el alcance del proyecto, te sugerimos seguir este flujo:
 3. Ve al **POS**, realiza una venta de prueba y genera el **Ticket**.
 4. Revisa el **Dashboard** y el panel de **Inventario** para comprobar el descuento automático del stock.
 
+## Guia de Segundas Pruebas
+
+```bash
+cd backend
+npm run test:unit                                  # 25 pruebas unitarias (Vitest), sin base de datos
+DATABASE_URL=postgres://... npm test               # integración de la API contra PostgreSQL real (17 grupos)
+DATABASE_URL=postgres://... npm run test:all       # ambas
+```
+
+La integración **recarga los datos de demostración**: no usarla sobre una base con datos reales. Los escenarios de integración con evidencia (venta API → base y producto interfaz → base) y el recorrido de 26 pasos de la interfaz están en `docs/pruebas/` (ver su `README.md`).
+
+- [PDF de estas pruebas mencionadas](docs/pruebas/Pruebas-Gluten-Free-Life-Etapa3_1.pdf)
+
 ## Cómo demostrar el modo offline
 
 1. Ingresá y abrí **Configuración → Simular pérdida de conexión**.
@@ -336,8 +349,8 @@ Sin conexión, el resto de las pantallas queda en **solo lectura** con los datos
 
 ## Documentación
 
-- [Manual de usuario](docs/Manual-de-Usuario-Gluten-Free-Life.pdf): instalación de demostración, navegación y operación diaria.
-- [Manual técnico del programa](docs/Manual-Tecnico-Gluten-Free-Life.pdf): arquitectura, módulos, base de datos, lógica, ejecución y pruebas.
+- [Manual de usuario](docs/manuales/Manual-de-Usuario-Gluten-Free-Life.pdf): instalación de demostración, navegación y operación diaria.
+- [Manual técnico del programa](docs/manuales/Manual-Tecnico-Gluten-Free-Life.pdf): arquitectura, módulos, base de datos, lógica, ejecución y pruebas.
 
 ## 📂 Estructura del Proyecto
 
