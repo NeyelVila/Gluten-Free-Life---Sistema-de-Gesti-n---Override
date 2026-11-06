@@ -121,12 +121,12 @@ export default function ProductoForm({ open, producto, onClose, onSaved }: Props
         <Field label="Margen comercial (%)" error={errs.margen}>
           <input className={cx('field', errs.margen && 'field-error')} inputMode="decimal" value={f.margen} onChange={(e) => upd('margen', e.target.value)} />
         </Field>
-        <div className="rounded-xl bg-brand-50 p-3 sm:col-span-2">
+        <div className="rounded-xl bg-brand-50 p-3 sm:col-span-2 dark:bg-[#243d2a]">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="font-semibold text-brand-800">
-              {sug != null ? <>Precio sugerido: <b className="text-xl">{money(sug)}{f.tipo === 'GRANEL' ? '/kg' : ''}</b> <span className="text-sm text-ink-500">(costo {money(costoN)} + margen {num(margenN)}%)</span></> : 'Cargá costo y margen para ver el precio sugerido'}
+            <p className="font-semibold text-brand-800 dark:text-[#d4f0d7]">
+              {sug != null ? <>Precio sugerido: <b className="text-xl">{money(sug)}{f.tipo === 'GRANEL' ? '/kg' : ''}</b> <span className="text-sm text-ink-500 dark:text-[#a9c2b1]">(costo {money(costoN)} + margen {num(margenN)}%)</span></> : 'Cargá costo y margen para ver el precio sugerido'}
             </p>
-            <label className="flex items-center gap-2 text-sm font-semibold text-ink-700">
+            <label className="flex items-center gap-2 text-sm font-semibold text-ink-700 dark:text-[#c5d5cc]">
               <input type="checkbox" className="h-4 w-4 accent-brand-600" checked={precioManual} onChange={(e) => { setPrecioManual(e.target.checked); if (e.target.checked && sug != null && !f.precio) upd('precio', String(sug)); }} />
               Definir el precio manualmente
             </label>

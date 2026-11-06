@@ -399,10 +399,10 @@ export default function POS() {
                   placeholder={total ? money(total) : '$ 0'}
                 />
               </Field>
-              <div className="flex flex-wrap gap-2">
-                <button className="btn btn-sm btn-secondary" onClick={() => setRecibidoTxt(String(total))} disabled={!total}>Justo</button>
+              <div className="grid grid-cols-5 gap-1.5">
+                <button className="btn btn-sm btn-secondary !px-1 text-xs whitespace-nowrap" onClick={() => setRecibidoTxt(String(total))} disabled={!total}>Justo</button>
                 {[1000, 5000, 10000, 20000].map((m) => (
-                  <button key={m} className="btn btn-sm btn-secondary" onClick={() => setRecibidoTxt(String(m))}>{money(m)}</button>
+                  <button key={m} className="btn btn-sm btn-secondary !px-1 text-xs whitespace-nowrap" onClick={() => setRecibidoTxt(String(m))}>{money(m)}</button>
                 ))}
               </div>
               <div className={cx('flex items-center justify-between rounded-xl px-4 py-2.5 text-lg font-bold', vuelto != null && vuelto >= 0 ? 'bg-brand-100 text-brand-800' : 'bg-white text-ink-500')}>

@@ -59,7 +59,13 @@ export default function Reportes() {
                       <CartesianGrid vertical={false} stroke="#EFEBE0" />
                       <XAxis dataKey="etiqueta" tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: '#607D8B' }} />
                       <YAxis tickLine={false} axisLine={false} width={64} tick={{ fontSize: 12, fill: '#607D8B' }} tickFormatter={(v) => (v >= 1000 ? `${Math.round(v / 1000)}k` : String(v))} />
-                      <Tooltip cursor={{ fill: '#F1F8E9' }} formatter={(v: number, _n, p: any) => [`${money(v)} · ${p.payload.operaciones} op.`, 'Ventas']} />
+                      <Tooltip
+                        cursor={{ fill: 'var(--chart-hover)' }}
+                        contentStyle={{ backgroundColor: 'var(--chart-tooltip-bg)', border: '1px solid var(--chart-tooltip-border)', borderRadius: 12, color: 'var(--chart-tooltip-text)' }}
+                        labelStyle={{ color: 'var(--chart-tooltip-text)', fontWeight: 700 }}
+                        itemStyle={{ color: 'var(--chart-tooltip-text)' }}
+                        formatter={(v: number, _n, p: any) => [`${money(v)} · ${p.payload.operaciones} op.`, 'Ventas']}
+                      />
                       <Bar dataKey="total" fill="#43A047" radius={[6, 6, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>

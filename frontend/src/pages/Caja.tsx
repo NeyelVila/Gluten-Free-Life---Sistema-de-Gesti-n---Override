@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Banknote, CheckCircle2, CreditCard, Lock, Printer, Receipt, Smartphone, Undo2, Wallet, XCircle } from 'lucide-react';
-import { Badge, ConfirmModal, Empty, ErrorBox, Field, Loading, PageHeader, Spinner, StatCard, cx, useAsync } from '../components/ui';
+import { Banknote, CheckCircle2, CreditCard, Lock, Printer, Receipt, Smartphone, Undo2, Unlock, Wallet, XCircle } from 'lucide-react';
+import { Badge, ConfirmModal, Empty, ErrorBox, Field, Loading, Modal, PageHeader, Spinner, StatCard, cx, useAsync } from '../components/ui';
 import TicketPrint, { imprimirTicket } from '../components/Ticket';
 import { errMsg, get, post } from '../lib/api';
 import { canalLabel, fechaCorta, hora, hoyISO, money, parseDecimal } from '../lib/format';
@@ -21,6 +21,8 @@ export default function Caja() {
   const [contado, setContado] = useState('');
   const [obs, setObs] = useState('');
   const [confirm, setConfirm] = useState(false);
+  const [reabrir, setReabrir] = useState(false);
+  const [motivoReapertura, setMotivoReapertura] = useState('');
   const [busy, setBusy] = useState(false);
   const [anular, setAnular] = useState<Resumen['ventas'][number] | null>(null);
   const [ticket, setTicket] = useState<TicketData | null>(null);
@@ -58,6 +60,19 @@ export default function Caja() {
       setAnular(null);
       reload();
     } catch (e) { toast.error('No se pudo anular', errMsg(e)); setAnular(null); } finally { setBusy(false); }
+  }
+
+  async function confirmarReapertura() {
+    const motivo = motivoReapertura.trim();
+    if (motivo.length < 5) return toast.error('Indicá un motivo de al menos 5 caracteres');
+    setBusy(true);
+    try {
+      await post('/caja/reapertura', { fecha, motivo });
+      setReabrir(false);
+      setMotivoReapertura('');
+      toast.ok('Caja reabierta', 'Ahora podés corregir las operaciones y volver a cerrarla.');
+      reload();
+    } catch (e) { toast.error('No se pudo reabrir la caja', errMsg(e)); } finally { setBusy(false); }
   }
 
   async function reimprimir(id: number) {
@@ -100,11 +115,12 @@ export default function Caja() {
               ))}
               {d.cierre!.observacion && <p className="text-sm text-ink-500">Obs.: {d.cierre!.observacion}</p>}
             </dl>
-            <div className={cx('grid place-items-center rounded-2xl p-6 text-center', d.cierre!.diferencia === 0 ? 'bg-brand-50' : 'bg-peligro-50')}>
+            <div className={cx('grid place-items-center rounded-2xl p-6 text-center', d.cierre!.diferencia === 0 ? 'bg-brand-50 dark:bg-[#243d2a] dark:text-[#d4f0d7]' : 'bg-peligro-50 dark:bg-[#4c1d1d] dark:text-[#fecaca]')}>
               {d.cierre!.diferencia === 0 ? <CheckCircle2 className="h-14 w-14 text-brand-600" /> : <XCircle className="h-14 w-14 text-peligro-600" />}
               <div className="mt-2">{estadoCaja(d.cierre!.diferencia)}</div>
               <p className="mt-2 text-3xl font-black">{d.cierre!.diferencia > 0 ? '+' : ''}{money(d.cierre!.diferencia)}</p>
               <p className="text-sm text-ink-500">{d.cierre!.diferencia > 0 ? 'Sobrante' : d.cierre!.diferencia < 0 ? 'Faltante' : 'Sin diferencia'}</p>
+              <button className="btn btn-md btn-secondary mt-4" onClick={() => setReabrir(true)} disabled={busy}><Unlock className="h-4 w-4" /> Reabrir caja</button>
             </div>
           </div>
         ) : (
@@ -115,7 +131,7 @@ export default function Caja() {
               <Field label="Efectivo contado" ><input className="field text-xl font-bold" inputMode="decimal" value={contado} onChange={(e) => setContado(e.target.value)} placeholder="$ 0" /></Field>
               <Field label="Observación (opcional)"><input className="field" value={obs} maxLength={500} onChange={(e) => setObs(e.target.value)} /></Field>
             </div>
-            <div className={cx('grid place-items-center rounded-2xl p-6 text-center', diferencia == null ? 'bg-crema-100' : diferencia === 0 ? 'bg-brand-50' : 'bg-peligro-50')}>
+            <div className={cx('grid place-items-center rounded-2xl p-6 text-center', diferencia == null ? 'bg-crema-100 dark:bg-[#1b2621]' : diferencia === 0 ? 'bg-brand-50 dark:bg-[#243d2a] dark:text-[#d4f0d7]' : 'bg-peligro-50 dark:bg-[#4c1d1d] dark:text-[#fecaca]')}>
               {diferencia == null ? <p className="text-ink-500">Ingresá el efectivo contado para ver la diferencia.</p> : (
                 <>
                   {diferencia === 0 ? <CheckCircle2 className="h-14 w-14 text-brand-600" /> : <XCircle className="h-14 w-14 text-peligro-600" />}
@@ -156,6 +172,10 @@ export default function Caja() {
 
       <ConfirmModal open={confirm} busy={busy} title="Cerrar la caja del día" confirmLabel="Cerrar caja" onCancel={() => setConfirm(false)} onConfirm={cerrar}
         text={<>Efectivo esperado <b>{money(esperado)}</b>, contado <b>{money(Number.isFinite(contadoN) ? contadoN : 0)}</b>. Diferencia: <b>{money(diferencia ?? 0)}</b>. Una vez cerrada no se pueden anular las ventas de este día.</>} />
+      <Modal open={reabrir} onClose={() => !busy && setReabrir(false)} title="Reabrir caja" footer={<><button className="btn btn-md btn-secondary" onClick={() => setReabrir(false)} disabled={busy}>Cancelar</button><button className="btn btn-md btn-warning" onClick={confirmarReapertura} disabled={busy || motivoReapertura.trim().length < 5}>{busy && <Spinner className="h-4 w-4" />} Reabrir caja</button></>}>
+        <p className="mb-4 text-ink-700">La reapertura quedará registrada y permitirá anular o corregir ventas antes de realizar un nuevo cierre.</p>
+        <Field label="Motivo obligatorio" hint="Se conservará en la auditoría del cierre anterior."><textarea className="field min-h-24" value={motivoReapertura} maxLength={500} onChange={(e) => setMotivoReapertura(e.target.value)} placeholder="Ej.: corregir una venta cargada con medio de pago incorrecto" /></Field>
+      </Modal>
       <ConfirmModal open={!!anular} busy={busy} tone="danger" title="Anular venta" confirmLabel="Anular venta" onCancel={() => setAnular(null)} onConfirm={anularVenta}
         text={<>Se anula el ticket N° {anular ? String(anular.numero_ticket).padStart(5, '0') : ''} por <b>{money(anular?.total_cobrado ?? 0)}</b>, se devuelve el stock y deja de contar en la caja y los reportes.</>} />
       <TicketPrint ticket={ticket} comercio={comercio} />

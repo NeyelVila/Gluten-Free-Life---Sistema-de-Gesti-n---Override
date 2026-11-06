@@ -73,9 +73,9 @@ export default function ProductoDetalle() {
           ['Código de barras', p.codigo_barra ?? '—', false],
           ['Próximo vencimiento', fechaCorta(proximo?.fecha_vencimiento), proximo?.estado === 'VENCIDO'],
         ].map(([l, v, crit]) => (
-          <div key={l as string} className="card p-4">
+          <div key={l as string} className={cx('card p-4', l === 'Próximo vencimiento' && 'dark:bg-[#1b2621]')}>
             <p className="text-xs font-bold uppercase tracking-wide text-ink-500">{l}</p>
-            <p className={cx('mt-1 truncate text-2xl font-extrabold', crit && 'text-peligro-600')}>{v}</p>
+            <p className={cx('mt-1 truncate text-2xl font-extrabold', l === 'Próximo vencimiento' && !crit && 'text-brand-800 dark:text-[#b9e6c1]', crit && 'text-peligro-600 dark:text-[#fecaca]')}>{v}</p>
           </div>
         ))}
       </div>
@@ -90,7 +90,7 @@ export default function ProductoDetalle() {
             <thead><tr><th className="th">Fecha de vencimiento</th><th className="th !text-right">Cantidad</th><th className="th">Estado</th><th className="th" /></tr></thead>
             <tbody>
               {p.vencimientos.map((v) => (
-                <tr key={v.id_vencimiento} className={cx(v === proximo && 'bg-brand-50/70')}>
+                <tr key={v.id_vencimiento} className={cx(v === proximo && 'bg-brand-50/70 dark:bg-[#243d2a]')}>
                   <td className="td font-bold">{fechaCorta(v.fecha_vencimiento)} {v === proximo && <Badge tone="ok" className="ml-2">Próximo vencimiento</Badge>}</td>
                   <td className="td text-right">{num(v.cantidad)} {unidadDe(p.tipo_venta)}</td>
                   <td className="td"><VencBadge estado={v.estado} /></td>

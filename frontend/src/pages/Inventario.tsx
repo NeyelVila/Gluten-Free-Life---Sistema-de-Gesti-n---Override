@@ -71,7 +71,7 @@ export default function Inventario() {
               </thead>
               <tbody>
                 {data!.items.map((p) => (
-                  <tr key={p.id_producto} className="cursor-pointer transition hover:bg-brand-50/60" onClick={() => nav(`/inventario/${p.id_producto}`)}>
+                  <tr key={p.id_producto} className="cursor-pointer transition-colors hover:bg-brand-50/60 dark:hover:bg-[#243d2a]" onClick={() => nav(`/inventario/${p.id_producto}`)}>
                     <td className="td font-bold">{p.nombre}</td>
                     <td className="td text-ink-500">{p.categoria}</td>
                     <td className={cx('td text-right text-lg font-extrabold', p.estado === 'CRITICO' && 'text-peligro-600')}>{num(p.stock_actual)}</td>

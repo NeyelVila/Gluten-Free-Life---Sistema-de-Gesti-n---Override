@@ -30,7 +30,7 @@ export async function resumenCaja(db: Db, fecha?: string) {
     db
   );
   const cierre = await q1<any>(
-    `SELECT c.*, u.nombre AS usuario_nombre FROM cierre_caja c JOIN usuario u USING (id_usuario) WHERE fecha=$1::date`,
+    `SELECT c.*, u.nombre AS usuario_nombre FROM cierre_caja c JOIN usuario u USING (id_usuario) WHERE fecha=$1::date AND c.reabierta_en IS NULL`,
     [f],
     db
   );
@@ -76,6 +76,27 @@ export async function cerrarCaja(
     );
     const out = await resumenCaja(c, r.fecha);
     return { ...out, efectivo_esperado: esperado, cuadrada: diferencia === 0 };
+  });
+}
+
+export async function reabrirCaja(idUsuario: number, input: { fecha?: string; motivo: string }) {
+  return tx(async (c) => {
+    await q('SELECT pg_advisory_xact_lock(7001)', [], c);
+    const fecha = await fechaOHoy(c, input.fecha);
+    const cierre = await q1<any>(
+      'SELECT id_cierre, fecha FROM cierre_caja WHERE fecha=$1::date AND reabierta_en IS NULL FOR UPDATE',
+      [fecha],
+      c
+    );
+    if (!cierre) throw conflict('La caja de ese día no está cerrada');
+    await q(
+      `UPDATE cierre_caja
+       SET reabierta_en=now(), reabierta_por=$2, motivo_reapertura=$3
+       WHERE id_cierre=$1`,
+      [cierre.id_cierre, idUsuario, input.motivo],
+      c
+    );
+    return { fecha: cierre.fecha, reabierta: true };
   });
 }
 
