@@ -176,8 +176,8 @@ Sin conexión, el resto de las pantallas queda en **solo lectura** con los datos
 
 ## Documentación
 
-- [Manual de usuario](docs/manual-usuario.md): instalación de demostración, navegación y operación diaria.
-- [Manual técnico del programa](docs/manual-tecnico.md): arquitectura, módulos, base de datos, lógica, ejecución y pruebas.
+- [Manual de usuario](docs/Manual-de-Usuario-Gluten-Free-Life.pdf): instalación de demostración, navegación y operación diaria.
+- [Manual técnico del programa](docs/Manual-Tecnico-Gluten-Free-Life.pdf): arquitectura, módulos, base de datos, lógica, ejecución y pruebas.
 
 ## 📂 Estructura del Proyecto
 
@@ -207,13 +207,13 @@ gluten-free-life/
 | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 
 ---
+
 ## Licencia
 
-Proyecto con fines educativos (Practica profesionalizante IV: PROYETO INTEGRADOR). 
+Proyecto con fines educativos (Practica profesionalizante IV: PROYETO INTEGRADOR).
 
 Repositorio: https://github.com/NeyelVila/Gluten-Free-Life---Sistema-de-Gesti-n---Override
 
 **Año:** 2026
 
 _Agradecimientos especiales a los profesores y mentores que acompañaron el proceso de desarrollo de este proyecto._
-
