@@ -69,23 +69,37 @@ export default function Dashboard() {
         ) : (
           <div className="grid gap-4 lg:grid-cols-2">
             <ul className="space-y-2">
-              {d.stock_critico.items.map((p) => (
-                <li key={p.id_producto} className="flex items-center justify-between gap-3 rounded-xl bg-peligro-50 px-4 py-2.5 text-peligro-700">
-                  <span className="font-semibold">🔴 Stock crítico: {p.nombre}</span>
-                  <Badge tone="crit">{num(p.stock_actual)} {unidadDe(p.tipo_venta)} (mín. {num(p.stock_minimo)})</Badge>
+              {d.stock_critico.cantidad === 0 ? (
+                <li className="rounded-xl bg-brand-50 px-4 py-2.5 font-semibold text-brand-800">
+                  🟢 No hay productos con stock crítico.
                 </li>
-              ))}
-              {d.stock_critico.cantidad > d.stock_critico.items.length && (
-                <li className="px-2 text-sm text-ink-500">y {d.stock_critico.cantidad - d.stock_critico.items.length} más…</li>
+              ) : (
+                <>
+                  {d.stock_critico.items.map((p) => (
+                    <li key={p.id_producto} className="flex items-center justify-between gap-3 rounded-xl bg-peligro-50 px-4 py-2.5 text-[#9f4b4b]">
+                      <span className="font-semibold">🔴 Stock crítico: {p.nombre}</span>
+                      <Badge tone="crit">{num(p.stock_actual)} {unidadDe(p.tipo_venta)} (mín. {num(p.stock_minimo)})</Badge>
+                    </li>
+                  ))}
+                  {d.stock_critico.cantidad > d.stock_critico.items.length && (
+                    <li className="px-2 text-sm text-ink-500">y {d.stock_critico.cantidad - d.stock_critico.items.length} más…</li>
+                  )}
+                </>
               )}
             </ul>
             <ul className="space-y-2">
-              {d.proximos_vencimientos.items.map((v) => (
-                <li key={v.id_vencimiento} className={cx('flex items-center justify-between gap-3 rounded-xl px-4 py-2.5', v.estado === 'VENCIDO' ? 'bg-peligro-50 text-peligro-700' : 'bg-alerta-50 text-alerta-700')}>
-                  <span className="font-semibold">{v.estado === 'VENCIDO' ? '🔴 Vencido' : '🟠 Vence pronto'}: {v.producto}</span>
-                  <Badge tone={v.estado === 'VENCIDO' ? 'crit' : 'warn'}>{fechaCorta(v.fecha_vencimiento)}</Badge>
+              {d.proximos_vencimientos.cantidad === 0 ? (
+                <li className="rounded-xl bg-brand-50 px-4 py-2.5 font-semibold text-brand-800">
+                  🟢 No hay productos por vencer en los próximos {d.dias_alerta} días ni vencidos.
                 </li>
-              ))}
+              ) : (
+                d.proximos_vencimientos.items.map((v) => (
+                  <li key={v.id_vencimiento} className={cx('flex items-center justify-between gap-3 rounded-xl px-4 py-2.5', v.estado === 'VENCIDO' ? 'bg-peligro-50 text-[#9f4b4b]' : 'bg-alerta-50 text-alerta-700')}>
+                    <span className="font-semibold">{v.estado === 'VENCIDO' ? '🔴 Vencido' : '🟠 Vence pronto'}: {v.producto}</span>
+                    <Badge tone={v.estado === 'VENCIDO' ? 'crit' : 'warn'}>{fechaCorta(v.fecha_vencimiento)}</Badge>
+                  </li>
+                ))
+              )}
               {d.alertas_sistema.map((a) => (
                 <li key={a.id} className="flex items-start justify-between gap-3 rounded-xl bg-sky-50 px-4 py-2.5 text-sm text-sky-800">
                   <span>ℹ️ {a.mensaje}</span>
@@ -115,7 +129,14 @@ export default function Dashboard() {
                 <CartesianGrid vertical={false} stroke="#EFEBE0" />
                 <XAxis dataKey="etiqueta" tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: '#607D8B' }} />
                 <YAxis tickLine={false} axisLine={false} width={64} tick={{ fontSize: 12, fill: '#607D8B' }} tickFormatter={(v) => (v >= 1000 ? `${Math.round(v / 1000)}k` : String(v))} />
-                <Tooltip cursor={{ fill: '#F1F8E9' }} formatter={(v: number) => [money(v), 'Ventas']} labelFormatter={(l) => l} />
+                <Tooltip
+                  cursor={{ fill: 'var(--chart-hover)' }}
+                  contentStyle={{ backgroundColor: 'var(--chart-tooltip-bg)', border: '1px solid var(--chart-tooltip-border)', borderRadius: 12, color: 'var(--chart-tooltip-text)' }}
+                  labelStyle={{ color: 'var(--chart-tooltip-text)', fontWeight: 700 }}
+                  itemStyle={{ color: 'var(--chart-tooltip-text)' }}
+                  formatter={(v: number) => [money(v), 'Ventas']}
+                  labelFormatter={(l) => l}
+                />
                 <Bar dataKey="total" radius={[6, 6, 0, 0]}>
                   {ventas7.map((_, i) => <Cell key={i} fill={i === ventas7.length - 1 ? '#2E7D32' : '#A5D6A7'} />)}
                 </Bar>

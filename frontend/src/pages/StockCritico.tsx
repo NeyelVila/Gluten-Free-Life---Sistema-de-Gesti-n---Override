@@ -37,9 +37,9 @@ export default function StockCritico() {
               <thead><tr><th className="th">Producto</th><th className="th !text-right">Stock actual</th><th className="th !text-right">Stock mínimo</th><th className="th !text-right">Cantidad sugerida</th><th className="th" /></tr></thead>
               <tbody>
                 {data!.map((p) => (
-                  <tr key={p.id_producto} className="bg-peligro-50/40">
-                    <td className="td"><button className="font-bold hover:underline" onClick={() => nav(`/inventario/${p.id_producto}`)}>🔴 {p.nombre}</button><div className="text-xs text-ink-500">{p.categoria}</div></td>
-                    <td className="td text-right text-lg font-extrabold text-peligro-600">{num(p.stock_actual)} {unidadDe(p.tipo_venta)}</td>
+                  <tr key={p.id_producto} className="bg-peligro-50/40 dark:bg-[#3b2525]">
+                    <td className="td"><button className="font-bold text-[#9f4b4b] hover:underline dark:text-[#d99a9a]" onClick={() => nav(`/inventario/${p.id_producto}`)}>🔴 {p.nombre}</button><div className="text-xs text-ink-500">{p.categoria}</div></td>
+                    <td className="td text-right text-lg font-extrabold text-[#9f4b4b] dark:text-[#d99a9a]">{num(p.stock_actual)} {unidadDe(p.tipo_venta)}</td>
                     <td className="td text-right text-ink-500">{num(p.stock_minimo)} {unidadDe(p.tipo_venta)}</td>
                     <td className="td text-right font-bold">{num(p.cantidad_sugerida ?? 0)} {unidadDe(p.tipo_venta)}</td>
                     <td className="td text-right">

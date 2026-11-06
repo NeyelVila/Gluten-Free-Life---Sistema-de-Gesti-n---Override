@@ -95,7 +95,7 @@ export default function IngresoMercaderia() {
         <Field label="Fecha"><input type="date" className="field" value={fecha} max={hoyISO()} onChange={(e) => setFecha(e.target.value)} /></Field>
       </section>
 
-      <section className="card overflow-x-auto">
+      <section className="card overflow-x-auto focus-within:overflow-visible">
         <table className="w-full min-w-[56rem] text-[15px]">
           <thead><tr><th className="th">Producto</th><th className="th !text-right">Cantidad</th><th className="th !text-right">Precio de costo</th><th className="th">Vencimiento</th><th className="th">Precio de venta sugerido</th><th className="th" /></tr></thead>
           <tbody>

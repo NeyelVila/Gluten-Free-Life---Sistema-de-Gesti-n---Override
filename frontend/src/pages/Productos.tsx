@@ -68,13 +68,13 @@ export default function Productos() {
               </thead>
               <tbody>
                 {data!.items.map((p) => (
-                  <tr key={p.id_producto} className="hover:bg-brand-50/60">
+                  <tr key={p.id_producto} className="transition-colors hover:bg-brand-50/60 dark:hover:bg-[#243d2a]">
                     <td className="td font-mono text-sm text-ink-500">{p.codigo_barra ?? '—'}</td>
                     <td className="td font-bold">{p.nombre}</td>
                     <td className="td text-ink-500">{p.categoria}</td>
                     <td className="td text-right">{money(p.precio_costo)}</td>
                     <td className="td text-right">{num(p.porcentaje_margen)}%</td>
-                    <td className="td text-right text-lg font-extrabold text-brand-800">{money(p.precio_venta)}{p.tipo_venta === 'GRANEL' ? '/kg' : ''}</td>
+                    <td className="td text-right text-lg font-extrabold text-brand-800 dark:text-[#b9e6c1]">{money(p.precio_venta)}{p.tipo_venta === 'GRANEL' ? '/kg' : ''}</td>
                     <td className="td"><Badge tone={p.tipo_venta === 'GRANEL' ? 'info' : 'mute'}>{p.tipo_venta === 'GRANEL' ? 'Granel' : 'Unidad'}</Badge></td>
                     <td className="td">
                       <div className="flex justify-end gap-1">

@@ -10,7 +10,9 @@ body {
   font-size: 16px;
 }
 html.dark { color-scheme: dark; }
+html { --chart-tooltip-bg: #ffffff; --chart-tooltip-border: #d7e5d9; --chart-tooltip-text: #26352e; --chart-hover: #f1f8e9; }
 html.dark body { background: #111916; color: #e6efe9; }
+html.dark { --chart-tooltip-bg: #1c2923; --chart-tooltip-border: #557565; --chart-tooltip-text: #e6efe9; --chart-hover: #243d2a; }
 html.dark .bg-crema-50 { background-color: #1b2621; }
 html.dark .bg-crema-100 { background-color: #111916; }
 html.dark .bg-crema-200 { background-color: #2a3932; }
@@ -36,8 +38,8 @@ html.dark select option { background-color: #1c2923; color: #e6efe9; }
 .login-shell { transition: background .2s ease; }
 html.dark .login-shell { background: linear-gradient(135deg, #10241a 0%, #111916 52%, #183b27 100%); }
 html.dark .login-card { background-color: #1c2923; box-shadow: 0 25px 60px rgb(0 0 0 / .4); }
-.vencimiento-vencido { background-color: #fee2e2; color: #b91c1c; }
-.vencimiento-proximo { background-color: #fef3c7; color: #92400e; }
+.vencimiento-vencido { background-color: #fee2e2; color: #c13737; }
+.vencimiento-proximo { background-color: #fef3c7; color: #a5480e; }
 html.dark .vencimiento-vencido { background-color: #4c1d1d; color: #fecaca; }
 html.dark .vencimiento-proximo { background-color: #4a3210; color: #fde68a; }
 html.dark .vencimiento-vencido .text-ink-500,

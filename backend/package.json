@@ -13,18 +13,19 @@
     "migrate:prod": "node dist/migrate.js",
     "seed:prod": "node dist/seed.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:unit": "tsx src/test/unit.ts",
     "test": "tsx src/test/e2e.ts"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "exceljs": "^4.4.0",
+    "exceljs": "^3.4.0",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "pdfkit": "^0.15.0",
     "pg": "^8.12.0",
-    "zod": "^3.23.8"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

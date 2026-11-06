@@ -13,6 +13,14 @@
 # - Node.js 22
 # - npm
 # - PostgreSQL 16
+# - Cliente de PostgreSQL (incluye el comando `createdb`)
+#
+# En Debian/Ubuntu:
+#   sudo apt update
+#   sudo apt install postgresql postgresql-client
+#
+# Si PostgreSQL ya está instalado y solo falta `createdb`:
+#   sudo apt install postgresql-client
 #
 # En sistemas Linux donde el usuario no tiene permisos sobre Docker:
 #   sudo docker-compose up -d --build

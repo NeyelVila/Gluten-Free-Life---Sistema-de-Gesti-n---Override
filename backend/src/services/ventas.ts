@@ -200,7 +200,8 @@ export async function anularVenta(idVenta: number) {
     if (!v) throw notFound('Venta inexistente');
     if (v.estado === 'ANULADA') throw conflict('La venta ya estaba anulada');
     const cierre = await q1<any>(
-      `SELECT 1 FROM cierre_caja WHERE fecha = ((SELECT fecha_hora FROM venta WHERE id_venta=$1) AT TIME ZONE '${TZ}')::date`,
+      `SELECT 1 FROM cierre_caja WHERE fecha = ((SELECT fecha_hora FROM venta WHERE id_venta=$1) AT TIME ZONE '${TZ}')::date
+       AND reabierta_en IS NULL`,
       [idVenta],
       c
     );

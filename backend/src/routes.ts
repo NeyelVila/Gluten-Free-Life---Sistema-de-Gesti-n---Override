@@ -21,7 +21,7 @@ import {
   obtenerPedido,
 } from './services/pedidos';
 import { ingresoSchema, obtenerIngreso, registrarIngreso } from './services/ingresos';
-import { cerrarCaja, reporte, resumenCaja } from './services/caja';
+import { cerrarCaja, reabrirCaja, reporte, resumenCaja } from './services/caja';
 import { importarCatalogo, importSchema, validarCatalogo } from './services/importacion';
 
 export const api = Router();
@@ -347,6 +347,16 @@ api.post('/caja/cierre', ah(async (req, res) => {
     })
     .parse(req.body);
   res.status(201).json(await cerrarCaja(req.user!.id_usuario, b));
+}));
+
+api.post('/caja/reapertura', ah(async (req, res) => {
+  const b = z
+    .object({
+      fecha: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+      motivo: z.string().trim().min(5, 'Indicá un motivo de al menos 5 caracteres').max(500),
+    })
+    .parse(req.body);
+  res.json(await reabrirCaja(req.user!.id_usuario, b));
 }));
 
 // ─────────────────────────── Intermediario ───────────────────────────

@@ -245,7 +245,7 @@ async function main() {
     assert.equal(lista.body.length, 1);
   });
 
-  await t('R11 caja: resumen, arqueo, cierre único y anulación bloqueada', async () => {
+  await t('R11 caja: resumen, cierre, reapertura y anulación controlada', async () => {
     const r = await call('GET', '/caja/resumen');
     assert.ok(r.body.operaciones > 5);
     approx(r.body.digital, r.body.mercado_pago + r.body.tarjeta);
@@ -256,8 +256,10 @@ async function main() {
     approx(mal.body.cierre.diferencia, 50);
     assert.equal(mal.body.cuadrada, false);
     assert.equal((await call('POST', '/caja/cierre', { efectivo_contado: 1 })).status, 409);
+    assert.equal((await call('POST', '/caja/reapertura', { motivo: 'Corregir una venta cargada' })).status, 200);
     const nueva = await call('POST', '/ventas', { canal_pago: 'TARJETA', items: [{ id_producto: prods['Harina de arroz'].id_producto, cantidad: 1 }] });
-    assert.equal((await call('POST', `/ventas/${nueva.body.venta.id_venta}/anular`)).status, 409, 'caja cerrada');
+    assert.equal((await call('POST', `/ventas/${nueva.body.venta.id_venta}/anular`)).status, 200, 'caja reabierta');
+    assert.equal((await call('POST', '/caja/cierre', { efectivo_contado: r.body.efectivo + 50 })).status, 201, 'nuevo cierre después de reabrir');
   });
 
   await t('reportes y dashboard', async () => {
