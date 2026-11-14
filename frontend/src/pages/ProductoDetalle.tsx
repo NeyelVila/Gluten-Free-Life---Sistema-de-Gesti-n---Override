@@ -90,7 +90,7 @@ export default function ProductoDetalle() {
             <thead><tr><th className="th">Fecha de vencimiento</th><th className="th !text-right">Cantidad</th><th className="th">Estado</th><th className="th" /></tr></thead>
             <tbody>
               {p.vencimientos.map((v) => (
-                <tr key={v.id_vencimiento} className={cx(v === proximo && 'bg-brand-50/70 dark:bg-[#243d2a]')}>
+                <tr key={v.id_vencimiento} className={cx(v === proximo && 'bg-brand-50/70 [&>td]:!text-brand-900 dark:bg-[#243d2a] dark:[&>td]:!text-white')}>
                   <td className="td font-bold">{fechaCorta(v.fecha_vencimiento)} {v === proximo && <Badge tone="ok" className="ml-2">Próximo vencimiento</Badge>}</td>
                   <td className="td text-right">{num(v.cantidad)} {unidadDe(p.tipo_venta)}</td>
                   <td className="td"><VencBadge estado={v.estado} /></td>
